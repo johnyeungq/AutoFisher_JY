@@ -1,0 +1,3 @@
+displayName = Auto Fisher JY
+author = JY
+version = 0.1

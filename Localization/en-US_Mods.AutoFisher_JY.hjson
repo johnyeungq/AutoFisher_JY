@@ -1,0 +1,17 @@
+"Keybinds.Toggle Auto-Fisher.DisplayName": Toggle  Auto- Fisher
+
+Configs: {
+	AutoFisherConfig: {
+		DisplayName: Auto Fisher Config
+
+		EnableAutoFishing: {
+			Label: Enable Auto-Fishing
+			Tooltip: ""
+		}
+
+		SlotIndex: {
+			Label: Auto-Fishing Inventory Slot (0 = first)
+			Tooltip: Which inventory slot to use for auto-fishing (0 = first, 9 = tenth)
+		}
+	}
+}
