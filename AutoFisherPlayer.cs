@@ -11,7 +11,10 @@ namespace AutoFisher_JY
         private int autoFishTimer = 0;
         private int clickPhase = 0;
         private bool shouldClick = false;
+        private AutoFisherConfig _config;
 
+        private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  // 0 means no keybind, 1-9 for keys 1-9  
+        private bool EnableAutoFisher() { return _config.EnableAutoFisher; }    
         void ResetAutoFish()
         {
             autoFishTimer = 0;
@@ -24,6 +27,10 @@ namespace AutoFisher_JY
         }
         public override void OnEnterWorld()
         {
+            if(_config == null)
+            {
+                _config = ModContent.GetInstance<AutoFisherConfig>();
+            }   
             ResetAutoFish();
         }
         public override void OnHurt(Player.HurtInfo info)
@@ -54,10 +61,15 @@ namespace AutoFisher_JY
 
         public override void PreUpdate()
         {
+            if(!EnableAutoFisher())
+            {
+                ResetAutoFish();
+                return;
+            }   
            
-            // Your fishing logic...
-            Item slot1Item = Player.inventory[0]; // Update to use slotIndex
-            if (Player.selectedItem == 0 && slot1Item.fishingPole > 0 && slot1Item.stack > 0)
+            
+            Item slotItem = Player.inventory[keybindToggle()];
+            if (Player.selectedItem == keybindToggle() && slotItem.fishingPole > 0 && slotItem.stack > 0)
             {
                 bool isFishing = false;
                 bool fishOnHook = false;
