@@ -9,9 +9,6 @@ Configs: {
 			Tooltip: ""
 		}
 
-		SlotIndex: {
-			Label: Auto-Fishing Inventory Slot (0 = first)
-			Tooltip: Which inventory slot to use for auto-fishing (0 = first, 9 = tenth)
-		}
+
 	}
 }
