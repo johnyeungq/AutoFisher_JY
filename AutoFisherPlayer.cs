@@ -19,8 +19,8 @@ namespace AutoFisher_JY
         private bool EnableAutoFisher() { return _config.EnableAutoFisher; }    
         private bool FishingGodModeEnabled() { return _config.EnableGodMode; } // This is used to check if the god mode is enabled or not  
         private int AutoBuffTimer() { return _config.AutoBuffTimer; } 
-
         private bool AutoBuff() { return _config.AutoBuff; }
+        private bool DisableLog() { return _config.DisableLog; }
 
 
         void ResetAutoFish()
@@ -61,10 +61,9 @@ namespace AutoFisher_JY
         }
         private void RequestBuff()
         {
-
-            PlayerInput.GenerateInputTags_GamepadUI("QuickBuff");
-
-            
+            PlayerInput.Triggers.Current.QuickBuff = true; // Simulate Quick Buff trigger
+         //   Main.NewText("Buff", 50, 255, 130);
+          
         }
 
 
@@ -96,13 +95,19 @@ namespace AutoFisher_JY
                 if (_AutoBuffTimer <= 0) 
                 {
                     RequestBuff(); 
-                    _AutoBuffTimer = AutoBuffTimer()*60; // Reset timer to 8 minutes (480 seconds)
+                    _AutoBuffTimer = AutoBuffTimer()*60*60; // Reset timer
+                    if (!DisableLog())
+                    {
+                        Main.NewText($"BufferTimer:{AutoBuffTimer().ToString()} mins", 50, 255, 130);
+                    }
                 }
                 else
                 {
                     _AutoBuffTimer--; // Decrease timer
                 }
             }
+
+
             if (!FishingGodModeEnabled())
             {
                 Item slotItem = Player.inventory[keybindToggle()];
@@ -110,7 +115,7 @@ namespace AutoFisher_JY
                 {
                     bool isFishing = false;
                     bool fishOnHook = false;
-
+                  
                     foreach (var projectile in Main.projectile)
                     {
                         if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
@@ -119,7 +124,9 @@ namespace AutoFisher_JY
                    
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
-                                Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
+                                if (!DisableLog()){
+                                    Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
+                                }
                                 Requestreel();
                             }
                             break;
@@ -130,15 +137,21 @@ namespace AutoFisher_JY
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
                         Requestreel();
-                        autoFishTimer = 60;
-                        Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
+                        autoFishTimer = 60; if (!DisableLog())
+                        {
+                            Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
+                        }
+                        
                         CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
                     }
                     else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
                     {
                         RequestClick();
                         autoFishTimer = 60;
-                        Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
+                        if (!DisableLog())
+                        {
+                            Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
+                        }
                         CombatText.NewText(Player.getRect(), Color.LightBlue, "Auto-fishing: Reel in!");
                     }
                 }
@@ -165,7 +178,10 @@ namespace AutoFisher_JY
                             projectile.FishingCheck(); //God Mode Logic
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
-                                Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
+                                if (!DisableLog())
+                                {
+                                    Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
+                                }
                                 Requestreel();
                             }
                             break;
@@ -178,14 +194,20 @@ namespace AutoFisher_JY
                     {
                         Requestreel();
                         autoFishTimer = 60;
-                        Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
-                        CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
+                        if (!DisableLog()){
+                            Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
+                        }
+                            CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
                     }
                     else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
                     {
                         RequestClick();
                         autoFishTimer = 60;
-                        Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
+                        if (!DisableLog())
+                        {
+
+                            Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
+                        }
                         CombatText.NewText(Player.getRect(), Color.LightBlue, "Auto-fishing: Reel in!");
                     }
                 }
@@ -205,5 +227,6 @@ namespace AutoFisher_JY
         {
             return Player.poisoned;
         }
+       
     }
 }

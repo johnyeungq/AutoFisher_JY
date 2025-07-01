@@ -4,8 +4,6 @@ Configs: {
 	AutoFisherConfig: {
 		DisplayName: Auto Fisher Config
 
-		
-
 		EnableAutoFisher: {
 			Label: Enable Auto Fisher
 			Tooltip: ""
@@ -13,12 +11,27 @@ Configs: {
 
 		EnableGodMode: {
 			Label: Enable GodMode
-			Tooltip: "This Mod will Break Game Balance but good for only testing"
+			Tooltip: This Mod will Break Game Balance but good for only testing
+		}
+
+		DisableLog: {
+			Label: Disable Log
+			Tooltip: Enabling by Default
 		}
 
 		ToggleAutoFisherKey: {
 			Label: Toggle Auto-Fisher Keybind
 			Tooltip: Select a key (1-9) to bind for toggling Auto-Fisher.
+		}
+
+		AutoBuff: {
+			Label: Enable Auto Buff
+			Tooltip: ""
+		}
+
+		AutoBuffTimer: {
+			Label: Auto Buff Timer
+			Tooltip: Select Time (mins) to bind for reset buff
 		}
 	}
 }

@@ -4,8 +4,9 @@ using Terraria.ModLoader;
 
 namespace AutoFisher_JY
 {
-    public class AutoFisherConfig : ModConfig
-    {
+    public class AutoFisherConfig : ModConfig  //Know as _config in AutoFisherPlayer.cs  
+    {    
+
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Label("Enable Auto Fisher")]
@@ -16,6 +17,11 @@ namespace AutoFisher_JY
         [Tooltip("This Mod will Break Game Balance but good for only testing")]
         [DefaultValue(false)]
         public bool EnableGodMode { get; set; }
+        
+        [Label("Disable Log")]
+        [Tooltip("Enabling by Default")]
+        [DefaultValue(false)]
+        public bool DisableLog { get; set; }
 
 
 
@@ -27,8 +33,8 @@ namespace AutoFisher_JY
 
 
         [Label("Enable Auto Buff")]
-        [DefaultValue(true)]
-        public bool AutoBuff { get; set; } // Default value for AutoBuff is true
+        [DefaultValue(false)]
+        public bool AutoBuff { get; set; } 
 
         [Label("Auto Buff Timer")]
         [Tooltip("Select Time (mins) to bind for reset buff")]
