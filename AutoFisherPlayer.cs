@@ -8,12 +8,13 @@ namespace AutoFisher_JY
 {
     public class AutoFisherPlayer : ModPlayer
     {
+        private bool FishingGodModeEnabled;
         private int autoFishTimer = 0;
         private int clickPhase = 0;
         private bool shouldClick = false;
         private AutoFisherConfig _config;
 
-        private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  // 0 means no keybind, 1-9 for keys 1-9  
+        private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  // int key =  slot number > slot -1  
         private bool EnableAutoFisher() { return _config.EnableAutoFisher; }    
         void ResetAutoFish()
         {
@@ -65,48 +66,101 @@ namespace AutoFisher_JY
             {
                 ResetAutoFish();
                 return;
-            }   
-           
-            
-            Item slotItem = Player.inventory[keybindToggle()];
-            if (Player.selectedItem == keybindToggle() && slotItem.fishingPole > 0 && slotItem.stack > 0)
+            }
+            if (!FishingGodModeEnabled)
             {
-                bool isFishing = false;
-                bool fishOnHook = false;
-
-                foreach (var projectile in Main.projectile)
+                Item slotItem = Player.inventory[keybindToggle()];
+                if (Player.selectedItem == keybindToggle() && slotItem.fishingPole > 0 && slotItem.stack > 0)
                 {
-                    if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
-                    {
-                        isFishing = true;
+                    bool isFishing = false;
+                    bool fishOnHook = false;
 
-                        if (projectile.ai[1] < 0f)
+                    foreach (var projectile in Main.projectile)
+                    {
+                        if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
                         {
-                            Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
-                            Requestree();
+                            isFishing = true;
+                          //  projectile.FishingCheck();
+                            if (projectile.ai[1] < 0f) // Oh hook Logic
+                            {
+                                Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
+                                Requestree();
+                            }
+                            break;
                         }
-                        break;
+                    }
+
+                    if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
+                    {
+                        Requestree();
+                        autoFishTimer = 60;
+                        Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
+                        CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
+                    }
+                    else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
+                    {
+                        RequestClick();
+                        autoFishTimer = 60;
+                        Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
+                        CombatText.NewText(Player.getRect(), Color.LightBlue, "Auto-fishing: Reel in!");
                     }
                 }
 
-                if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
+                if (autoFishTimer > 0)
+                    autoFishTimer--;
+
+            }
+            
+            
+            else {
+
+                Item slotItem = Player.inventory[keybindToggle()];
+                if (Player.selectedItem == keybindToggle() && slotItem.fishingPole > 0 && slotItem.stack > 0)
                 {
-                    Requestree();
-                    autoFishTimer = 60;
-                    Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
-                    CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
+                    bool isFishing = false;
+                    bool fishOnHook = false;
+
+                    foreach (var projectile in Main.projectile)
+                    {
+                        if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
+                        {
+                            isFishing = true;
+                            projectile.FishingCheck(); //God Mode Logic
+                            if (projectile.ai[1] < 0f) // Oh hook Logic
+                            {
+                                Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
+                                Requestree();
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
+                    {
+                        Requestree();
+                        autoFishTimer = 60;
+                        Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
+                        CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
+                    }
+                    else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
+                    {
+                        RequestClick();
+                        autoFishTimer = 60;
+                        Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
+                        CombatText.NewText(Player.getRect(), Color.LightBlue, "Auto-fishing: Reel in!");
+                    }
                 }
-                else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
-                {
-                    RequestClick();
-                    autoFishTimer = 60;
-                    Main.NewText("Auto-fishing: Reel in!", 50, 255, 130);
-                    CombatText.NewText(Player.getRect(), Color.LightBlue, "Auto-fishing: Reel in!");
-                }
+
+                if (autoFishTimer > 0)
+                    autoFishTimer--;
+
+
+
             }
 
-            if (autoFishTimer > 0)
-                autoFishTimer--;
+
+
+
         }
     }
 }

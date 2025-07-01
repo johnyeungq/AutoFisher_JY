@@ -1,17 +1,19 @@
-"Keybinds.Toggle Auto-Fisher.DisplayName": Toggle  Auto- Fisher
+"Keybinds.Toggle Auto-Fisher.DisplayName": Toggle Auto-Fisher
 
 Configs: {
 	AutoFisherConfig: {
 		DisplayName: Auto Fisher Config
 
-		EnableAutoFishing: {
-			Label: Enable Auto-Fishing
-			Tooltip: ""
-		}
+		
 
 		EnableAutoFisher: {
 			Label: Enable Auto Fisher
 			Tooltip: ""
+		}
+
+		EnableGodMode: {
+			Label: Enable GodMode
+			Tooltip: "This Mod will Break Game Balance but good for only testing"
 		}
 
 		ToggleAutoFisherKey: {
