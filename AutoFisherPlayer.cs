@@ -57,7 +57,7 @@ namespace AutoFisher_JY
 
             PlayerInput.GenerateInputTags_GamepadUI("MouseLeft");
 
-            //QuickBuff
+            
         }
         private void RequestBuff()
         {
@@ -126,6 +126,7 @@ namespace AutoFisher_JY
                         }
                     }
 
+                    //this is so fking werid, clickPhase never passed to == 1 , but this works, so whatever    
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
                         Requestreel();
@@ -171,6 +172,8 @@ namespace AutoFisher_JY
                         }
                     }
 
+
+                    //this is so fking werid, clickPhase never passed to == 1 , but this works, so whatever    
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
                         Requestreel();
