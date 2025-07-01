@@ -44,7 +44,7 @@ namespace AutoFisher_JY
             ResetAutoFish();
         }
 
-        // Call this to request a click
+        // Call this to request a click , actually have no idea how it works but it works, whatever 
         private void RequestClick()
         {
 
@@ -52,13 +52,19 @@ namespace AutoFisher_JY
 
 
         }
-        private void Requestree()
+        //This two methods are used to simulate mouse click and reel in the fishing line
+        private void Requestreel()
         {
 
 
             PlayerInput.Triggers.Current.MouseLeft = true; // Simulate mouse click
             shouldClick = true;
         }
+
+
+
+
+
 
         public override void PreUpdate()
         {
@@ -80,11 +86,11 @@ namespace AutoFisher_JY
                         if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
                         {
                             isFishing = true;
-                          //  projectile.FishingCheck();
+                   
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
                                 Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
-                                Requestree();
+                                Requestreel();
                             }
                             break;
                         }
@@ -92,7 +98,7 @@ namespace AutoFisher_JY
 
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
-                        Requestree();
+                        Requestreel();
                         autoFishTimer = 60;
                         Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
                         CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
@@ -129,7 +135,7 @@ namespace AutoFisher_JY
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
                                 Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
-                                Requestree();
+                                Requestreel();
                             }
                             break;
                         }
@@ -137,7 +143,7 @@ namespace AutoFisher_JY
 
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
-                        Requestree();
+                        Requestreel();
                         autoFishTimer = 60;
                         Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
                         CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
