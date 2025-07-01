@@ -8,7 +8,8 @@ namespace AutoFisher_JY
 {
     public class AutoFisherPlayer : ModPlayer
     {
-        private bool FishingGodModeEnabled;
+        
+       
         private int autoFishTimer = 0;
         private int clickPhase = 0;
         private bool shouldClick = false;
@@ -16,6 +17,12 @@ namespace AutoFisher_JY
 
         private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  // int key =  slot number > slot -1  
         private bool EnableAutoFisher() { return _config.EnableAutoFisher; }    
+        private bool FishingGodModeEnabled() { return _config.EnableGodMode; } // This is used to check if the god mode is enabled or not  
+        private int AutoBuffTimer() { return _config.AutoBuffTimer; } 
+
+        private bool AutoBuff() { return _config.AutoBuff; }
+
+
         void ResetAutoFish()
         {
             autoFishTimer = 0;
@@ -50,8 +57,17 @@ namespace AutoFisher_JY
 
             PlayerInput.GenerateInputTags_GamepadUI("MouseLeft");
 
-
+            //QuickBuff
         }
+        private void RequestBuff()
+        {
+
+            PlayerInput.GenerateInputTags_GamepadUI("QuickBuff");
+
+            
+        }
+
+
         //This two methods are used to simulate mouse click and reel in the fishing line
         private void Requestreel()
         {
@@ -62,18 +78,32 @@ namespace AutoFisher_JY
         }
 
 
-
+        private int _AutoBuffTimer = 0; // Timer for auto poison
 
 
 
         public override void PreUpdate()
         {
-            if(!EnableAutoFisher())
+            if (!EnableAutoFisher())
             {
                 ResetAutoFish();
                 return;
             }
-            if (!FishingGodModeEnabled)
+
+            // Check if Auto Poison is enabled
+            if (AutoBuff())
+            {
+                if (_AutoBuffTimer <= 0) 
+                {
+                    RequestBuff(); 
+                    _AutoBuffTimer = AutoBuffTimer()*60; // Reset timer to 8 minutes (480 seconds)
+                }
+                else
+                {
+                    _AutoBuffTimer--; // Decrease timer
+                }
+            }
+            if (!FishingGodModeEnabled())
             {
                 Item slotItem = Player.inventory[keybindToggle()];
                 if (Player.selectedItem == keybindToggle() && slotItem.fishingPole > 0 && slotItem.stack > 0)
@@ -167,6 +197,10 @@ namespace AutoFisher_JY
 
 
 
+        }
+        private bool IsPlayerPoisoned()
+        {
+            return Player.poisoned;
         }
     }
 }

@@ -25,6 +25,16 @@ namespace AutoFisher_JY
         [Range(1, 9)]
         public int ToggleAutoFisherKey { get; set; }
 
-      
+
+        [Label("Enable Auto Buff")]
+        [DefaultValue(true)]
+        public bool AutoBuff { get; set; } // Default value for AutoBuff is true
+
+        [Label("Auto Buff Timer")]
+        [Tooltip("Select Time (mins) to bind for reset buff")]
+        [DefaultValue(8)]
+        [Range(1, 59)]
+        public int AutoBuffTimer { get; set; }
+
     }
 }
