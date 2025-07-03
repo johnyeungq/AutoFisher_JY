@@ -10,8 +10,9 @@
 
 	<!-- References -->
 	<ItemGroup>
-	  <None Remove="Icon.png" />
-	  <None Remove="icon_workshop.png" />
+	  <None Remove="icon.png" />
+	  <None Remove="Icon1.png" />
+	  <None Remove="icon3_workshop.png" />
 	</ItemGroup>
 
 </Project>

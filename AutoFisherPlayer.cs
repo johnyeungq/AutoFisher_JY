@@ -21,8 +21,9 @@ namespace AutoFisher_JY
         private int AutoBuffTimer() { return _config.AutoBuffTimer; } 
         private bool AutoBuff() { return _config.AutoBuff; }
         private bool DisableLog() { return _config.DisableLog; }
-
-
+        private bool buffOnlyFishing() { return _config.BuffOnlyFishing; } // This is used to check if the buff only fishing is enabled or not
+        private bool SpecialLog() { return _config.EnableSpecialLog; } // This is used to check if the special log is enabled or not
+    
         void ResetAutoFish()
         {
             autoFishTimer = 0;
@@ -40,6 +41,16 @@ namespace AutoFisher_JY
                 _config = ModContent.GetInstance<AutoFisherConfig>();
             }   
             ResetAutoFish();
+
+            if (SpecialLog())
+            {
+                string version = ModContent.GetInstance<AutoFisher_JY>().Version.ToString();
+                Main.NewText("[AF]AutoFisher_JY Mod Loaded!", 50, 255, 130);
+                Main.NewText($"[AF]Version: {version}" , 50, 255, 130);
+                //Main.NewText("Press " + _config.ToggleAutoFisherKey.ToString() + " to toggle Auto-Fisher", 50, 255, 130);
+                Main.NewText("[AF] 0.1.4 Updated! Please Check Config to enable/disable this special log & 'Buff only Fishing' ", 50, 255, 130);
+
+            }
         }
         public override void OnHurt(Player.HurtInfo info)
         {
@@ -83,6 +94,7 @@ namespace AutoFisher_JY
 
         public override void PreUpdate()
         {
+            bool _isFishing =false;
             if (!EnableAutoFisher())
             {
                 ResetAutoFish();
@@ -90,24 +102,7 @@ namespace AutoFisher_JY
             }
 
             // Check if Auto Poison is enabled
-            if (AutoBuff())
-            {
-                if (_AutoBuffTimer <= 0) 
-                {
-                    RequestBuff(); 
-                    _AutoBuffTimer = AutoBuffTimer()*60*60; // Reset timer
-                    if (!DisableLog())
-                    {
-                        Main.NewText($"BufferTimer:{AutoBuffTimer().ToString()} mins", 50, 255, 130);
-                    }
-                }
-                else
-                {
-                    _AutoBuffTimer--; // Decrease timer
-                }
-            }
-
-
+          
             if (!FishingGodModeEnabled())
             {
                 Item slotItem = Player.inventory[keybindToggle()];
@@ -121,7 +116,7 @@ namespace AutoFisher_JY
                         if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
                         {
                             isFishing = true;
-                   
+                            _isFishing = true;
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
                                 if (!DisableLog()){
@@ -175,6 +170,7 @@ namespace AutoFisher_JY
                         if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
                         {
                             isFishing = true;
+                            _isFishing = true;
                             projectile.FishingCheck(); //God Mode Logic
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
@@ -220,6 +216,28 @@ namespace AutoFisher_JY
             }
 
 
+
+            if (AutoBuff())
+            {
+                if (buffOnlyFishing() && !_isFishing) // If buff only fishing is enabled and not fishing, skip buffing
+                {
+                    return;
+                }
+                if (_AutoBuffTimer <= 0)
+                {
+                    
+                    RequestBuff();
+                    _AutoBuffTimer = AutoBuffTimer() * 60 * 60; // Reset timer
+                    if (!DisableLog())
+                    {
+                        Main.NewText($"BufferTimer:{AutoBuffTimer().ToString()} mins", 50, 255, 130);
+                    }
+                }
+                else
+                {
+                    _AutoBuffTimer--; // Decrease timer
+                }
+            }
 
 
         }

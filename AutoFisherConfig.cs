@@ -42,5 +42,16 @@ namespace AutoFisher_JY
         [Range(1, 59)]
         public int AutoBuffTimer { get; set; }
 
+
+
+        [Label("Buff Only Fishing")]
+        [Tooltip("Enable this to apply buffs only when fishing.")]
+        [DefaultValue(false)]
+        public bool BuffOnlyFishing { get; set; }
+       
+        [Label("Enable Special Log")]
+        [Tooltip("Enable this to log watch the updates & others")]
+        [DefaultValue(true)]
+        public bool EnableSpecialLog { get; set; }
     }
 }

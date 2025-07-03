@@ -33,5 +33,15 @@ Configs: {
 			Label: Auto Buff Timer
 			Tooltip: Select Time (mins) to bind for reset buff
 		}
+
+		BuffOnlyFishing: {
+			Label: Buff Only Fishing
+			Tooltip: Enable this to apply buffs only when fishing.
+		}
+
+		EnableSpecialLog: {
+			Label: Enable Special Log
+			Tooltip: Enable this to log watch the updates & others
+		}
 	}
 }
