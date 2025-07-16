@@ -140,7 +140,7 @@ namespace AutoFisher_JY
             {
 
                 Requestreel();
-                clickPhase = 1;// oh fuck i forgot
+                clickPhase = 1;// oh fuck i forgot, this is useless i think no matter i pass the phase or not, it will still do the thing lmfao
                 if (!DisableLog())
                 {
                    // Main.NewText("Auto-Catch: Caught!", 50, 255, 130);
@@ -181,7 +181,7 @@ namespace AutoFisher_JY
                         }
                     }
 
-                 
+                 // starting to think this is not needed, but whatever
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
                         Requestreel();
