@@ -15,14 +15,21 @@ namespace AutoFisher_JY
         private bool shouldClick = false;
         private AutoFisherConfig _config;
 
-        private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  // int key =  slot number > slot -1  
-        private bool EnableAutoFisher() { return _config.EnableAutoFisher; }    
-        private bool FishingGodModeEnabled() { return _config.EnableGodMode; } // This is used to check if the god mode is enabled or not  
-        private int AutoBuffTimer() { return _config.AutoBuffTimer; } 
+        private int CatchKey() { return _config.ToggleAutoCatchKey -1; }
+        private bool AutoCatchingEnabled() { return _config.AutoCatching; }
+
+
+        private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  
+        private bool EnableAutoFisher() { return _config.EnableAutoFisher; }
+
+        private bool FishingGodModeEnabled() { return _config.EnableGodMode; }
+
         private bool AutoBuff() { return _config.AutoBuff; }
+        private bool buffOnlyFishing() { return _config.BuffOnlyFishing; }
+        private int AutoBuffTimer() { return _config.AutoBuffTimer; }
+
         private bool DisableLog() { return _config.DisableLog; }
-        private bool buffOnlyFishing() { return _config.BuffOnlyFishing; } // This is used to check if the buff only fishing is enabled or not
-        private bool SpecialLog() { return _config.EnableSpecialLog; } // This is used to check if the special log is enabled or not
+        private bool SpecialLog() { return _config.EnableSpecialLog; } 
     
         void ResetAutoFish()
         {
@@ -46,8 +53,7 @@ namespace AutoFisher_JY
             {
                 string version = ModContent.GetInstance<AutoFisher_JY>().Version.ToString();
                 Main.NewText("[AF]AutoFisher_JY Mod Loaded!", 50, 255, 130);
-                Main.NewText($"[AF]Version: {version}" , 50, 255, 130);
-                //Main.NewText("Press " + _config.ToggleAutoFisherKey.ToString() + " to toggle Auto-Fisher", 50, 255, 130);
+                Main.NewText($"[AF]Version: {version}" , 50, 255, 130);       
                 Main.NewText("[AF] 0.1.4 Updated! Please Check Config to enable/disable this special log & 'Buff only Fishing' ", 50, 255, 130);
 
             }
@@ -90,7 +96,32 @@ namespace AutoFisher_JY
 
         private int _AutoBuffTimer = 0; // Timer for auto poison
 
-
+        private bool IsCritterNearby()
+        {
+          
+            float detectionRange = 10f * 16f; 
+            foreach (var npc in Main.npc)
+            {
+                if (npc.active && npc.catchItem > 0) 
+                {
+                    float distance = Vector2.Distance(Player.Center, npc.Center);
+                    if (distance <= detectionRange)
+                    {
+                        return true; 
+                    }
+                }
+            }
+            return false; 
+        }
+        private bool IsNetItem(Item item)
+        {
+            if (item == null || item.type <= ItemID.None)
+            {
+                return false; 
+            }
+           // Main.NewText(item.ToString(), 50, 255, 130);
+            return ItemID.Sets.CatchingTool[item.type]; 
+        }
 
         public override void PreUpdate()
         {
@@ -101,8 +132,30 @@ namespace AutoFisher_JY
                 return;
             }
 
-            // Check if Auto Poison is enabled
-          
+
+        
+
+
+            if (AutoCatchingEnabled() && Player.selectedItem == CatchKey() && IsNetItem(Player.inventory[CatchKey()]) && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems  && clickPhase == 0 && IsCritterNearby())
+            {
+
+                Requestreel();
+                clickPhase = 1;// oh fuck i forgot
+                if (!DisableLog())
+                {
+                   // Main.NewText("Auto-Catch: Caught!", 50, 255, 130);
+                }
+                CombatText.NewText(Player.getRect(), Color.LightGreen, "Auto-Catch: Caught!");
+            }
+            else if (clickPhase == 1)
+            {
+                clickPhase = 0;
+            }
+
+
+
+
+
             if (!FishingGodModeEnabled())
             {
                 Item slotItem = Player.inventory[keybindToggle()];
@@ -128,7 +181,7 @@ namespace AutoFisher_JY
                         }
                     }
 
-                    //this is so fking werid, clickPhase never passed to == 1 , but this works, so whatever    
+                 
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
                         Requestreel();

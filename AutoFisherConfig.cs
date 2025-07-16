@@ -6,7 +6,7 @@ namespace AutoFisher_JY
 {
     public class AutoFisherConfig : ModConfig  //Know as _config in AutoFisherPlayer.cs  
     {    
-
+         
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Label("Enable Auto Fisher")]
@@ -53,5 +53,19 @@ namespace AutoFisher_JY
         [Tooltip("Enable this to log watch the updates & others")]
         [DefaultValue(true)]
         public bool EnableSpecialLog { get; set; }
+
+
+        [Label("Auto Catch")]
+        [Tooltip("Enable this to apply Auto Catch.")]
+        
+        [DefaultValue(true)]
+        public bool AutoCatching { get; set; }
+
+        [Label("Toggle Auto Catch Keybind")]
+        [Tooltip("Select a key (1-10) to bind for toggling Auto-Fisher.")]
+        [DefaultValue(10)]
+        [Range(1, 10)]
+        public int ToggleAutoCatchKey { get; set; }
+
     }
 }

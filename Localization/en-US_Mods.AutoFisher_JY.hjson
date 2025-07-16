@@ -43,5 +43,15 @@ Configs: {
 			Label: Enable Special Log
 			Tooltip: Enable this to log watch the updates & others
 		}
+
+		AutoCatching: {
+			Label: Auto Catch
+			Tooltip: Enable this to apply Auto Catch.
+		}
+
+		ToggleAutoCatchKey: {
+			Label: Toggle Auto Catch Keybind
+			Tooltip: Select a key (1-10) to bind for toggling Auto-Fisher.
+		}
 	}
 }
