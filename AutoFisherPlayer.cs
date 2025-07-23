@@ -8,18 +8,19 @@ namespace AutoFisher_JY
 {
     public class AutoFisherPlayer : ModPlayer
     {
-        
-       
+        #region Data
+
         private int autoFishTimer = 0;
         private int clickPhase = 0;
         private bool shouldClick = false;
         private AutoFisherConfig _config;
 
-        private int CatchKey() { return _config.ToggleAutoCatchKey -1; }
+        #region Config
+        private int CatchKey() { return _config.ToggleAutoCatchKey - 1; }
         private bool AutoCatchingEnabled() { return _config.AutoCatching; }
 
 
-        private int keybindToggle() { return _config.ToggleAutoFisherKey -1 ; }  
+        private int keybindToggle() { return _config.ToggleAutoFisherKey - 1; }
         private bool EnableAutoFisher() { return _config.EnableAutoFisher; }
 
         private bool FishingGodModeEnabled() { return _config.EnableGodMode; }
@@ -29,35 +30,30 @@ namespace AutoFisher_JY
         private int AutoBuffTimer() { return _config.AutoBuffTimer; }
 
         private bool DisableLog() { return _config.DisableLog; }
-        private bool SpecialLog() { return _config.EnableSpecialLog; } 
-    
-        void ResetAutoFish()
-        {
-            autoFishTimer = 0;
-            clickPhase = 0;
-            shouldClick = false;
-        }
-        void OnDisable()
-        {
-            ResetAutoFish();
-        }
+        private bool SpecialLog() { return _config.EnableSpecialLog; }
+        private int _AutoBuffTimer = 0; // Timer for auto poison
+        #endregion
+
+        #endregion
+
+        #region Loading
         public override void OnEnterWorld()
         {
-            if(_config == null)
+            if (_config == null)
             {
                 _config = ModContent.GetInstance<AutoFisherConfig>();
-            }   
+            }
             ResetAutoFish();
 
             if (SpecialLog())
             {
                 string version = ModContent.GetInstance<AutoFisher_JY>().Version.ToString();
-                Main.NewText("[AF] AutoFisher_JY Mod Loaded!", 50, 255, 130);
-                Main.NewText($"[AF] Version: {version}" , 50, 255, 130);       
-                Main.NewText("[AF] 0.1.5 Updated! Auto Catcher Added! Try to put a bug net in slot 0 (last one)... ", 50, 255, 130);
+                Main.NewText("[AF]AutoFisher_JY Mod Loaded!", 50, 255, 130);
+                Main.NewText($"[AF]Version: {version}" , 50, 255, 130);       
+                Main.NewText("[AF] 0.1.4 Updated! Please Check Config to enable/disable this special log & 'Buff only Fishing' ", 50, 255, 130);
 
             }
-        }   
+        }
         public override void OnHurt(Player.HurtInfo info)
         {
             ResetAutoFish();
@@ -67,12 +63,7 @@ namespace AutoFisher_JY
             base.OnRespawn();
             ResetAutoFish();
         }
-
-        // Call this to request a click , actually have no idea how it works but it works, whatever 
-        private void RequestClick()
-        {
-
-            PlayerInput.GenerateInputTags_GamepadUI("MouseLeft");
+        #endregion
 
             
         }
@@ -104,13 +95,9 @@ namespace AutoFisher_JY
             {
                 if (npc.active && npc.catchItem > 0) 
                 {
-                    npc.type.ToString();
-
                     float distance = Vector2.Distance(Player.Center, npc.Center);
                     if (distance <= detectionRange)
                     {
-                        string name = npc.FullName;
-                        Main.NewText($"[AF] Critter: {name}", 50, 255, 130);
                         return true; 
                     }
                 }
@@ -129,7 +116,7 @@ namespace AutoFisher_JY
 
         public override void PreUpdate()
         {
-            bool _isFishing =false;
+            bool _isFishing = false;
             if (!EnableAutoFisher())
             {
                 ResetAutoFish();
@@ -137,10 +124,10 @@ namespace AutoFisher_JY
             }
 
 
-        
 
 
-            if (AutoCatchingEnabled() && Player.selectedItem == CatchKey() && IsNetItem(Player.inventory[CatchKey()]) && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems  && clickPhase == 0 && IsCritterNearby())
+
+            if (AutoCatchingEnabled() && Player.selectedItem == CatchKey() && IsNetItem(Player.inventory[CatchKey()]) && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0 && IsCritterNearby())
             {
 
 
@@ -148,7 +135,7 @@ namespace AutoFisher_JY
                 clickPhase = 1;// oh fuck i forgot, this is useless i think no matter i pass the phase or not, it will still do the thing lmfao
                 if (!DisableLog())
                 {
-                  // Main.NewText("Auto-Catch: Cast!", 50, 255, 130);
+                    // Main.NewText("Auto-Catch: Caught!", 50, 255, 130);
                 }
                 CombatText.NewText(Player.getRect(), Color.LightGreen, "Auto-Catch: Cast!");
             }
@@ -168,7 +155,7 @@ namespace AutoFisher_JY
                 {
                     bool isFishing = false;
                     bool fishOnHook = false;
-                  
+
                     foreach (var projectile in Main.projectile)
                     {
                         if (projectile.active && projectile.bobber && projectile.owner == Player.whoAmI)
@@ -177,7 +164,8 @@ namespace AutoFisher_JY
                             _isFishing = true;
                             if (projectile.ai[1] < 0f) // Oh hook Logic
                             {
-                                if (!DisableLog()){
+                                if (!DisableLog())
+                                {
                                     Main.NewText("Auto-fishing: On HooK!", 50, 255, 130);
                                 }
                                 Requestreel();
@@ -186,7 +174,7 @@ namespace AutoFisher_JY
                         }
                     }
 
-                 // starting to think this is not needed, but whatever
+                    // starting to think this is not needed, but whatever
                     if (!isFishing && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 0)
                     {
                         Requestreel();
@@ -194,7 +182,7 @@ namespace AutoFisher_JY
                         {
                             Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
                         }
-                        
+
                         CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
                     }
                     else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
@@ -213,9 +201,10 @@ namespace AutoFisher_JY
                     autoFishTimer--;
 
             }
-            
-            
-            else {
+
+
+            else
+            {
 
                 Item slotItem = Player.inventory[keybindToggle()];
                 if (Player.selectedItem == keybindToggle() && slotItem.fishingPole > 0 && slotItem.stack > 0)
@@ -248,10 +237,11 @@ namespace AutoFisher_JY
                     {
                         Requestreel();
                         autoFishTimer = 60;
-                        if (!DisableLog()){
+                        if (!DisableLog())
+                        {
                             Main.NewText("Auto-fishing: Cast!", 50, 255, 130);
                         }
-                            CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
+                        CombatText.NewText(Player.getRect(), Color.Aqua, "Auto-fishing: Cast!");
                     }
                     else if (isFishing && fishOnHook && autoFishTimer == 0 && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems && clickPhase == 1)
                     {
@@ -283,7 +273,7 @@ namespace AutoFisher_JY
                 }
                 if (_AutoBuffTimer <= 0)
                 {
-                    
+
                     RequestBuff();
                     _AutoBuffTimer = AutoBuffTimer() * 60 * 60; // Reset timer
                     if (!DisableLog())
@@ -299,10 +289,96 @@ namespace AutoFisher_JY
 
 
         }
+        #endregion
+
+        #region Event
+
+        void OnDisable()
+        {
+            ResetAutoFish();
+        }
+        public override void OnHurt(Player.HurtInfo info)
+        {
+            ResetAutoFish();
+        }
+        public override void OnRespawn()
+        {
+            base.OnRespawn();
+            ResetAutoFish();
+        }
+
+        #endregion
+
+        #region CommonFunctions
+        void ResetAutoFish()
+        {
+            autoFishTimer = 0;
+            clickPhase = 0;
+            shouldClick = false;
+        } 
+        
+        // Call this to request a click , actually have no idea how it works but it works, whatever 
+        private void RequestClick()
+        {
+
+            PlayerInput.GenerateInputTags_GamepadUI("MouseLeft");
+
+
+        }
+        private void RequestBuff()
+        {
+            PlayerInput.Triggers.Current.QuickBuff = true; // Simulate Quick Buff trigger
+                                                           //   Main.NewText("Buff", 50, 255, 130);
+
+        }
+
+        //This two methods are used to simulate mouse click and reel in the fishing line
+        private void Requestreel()
+        {
+
+
+            PlayerInput.Triggers.Current.MouseLeft = true; // Simulate mouse click
+            shouldClick = true;
+        }
+        #endregion
+
+        #region Define
         private bool IsPlayerPoisoned()
         {
             return Player.poisoned;
         }
-       
+        private bool IsCritterNearby()
+        {
+
+            float detectionRange = 10f * 16f;
+            foreach (var npc in Main.npc)
+            {
+
+                if (npc.active && npc.catchItem > 0)
+                {
+                    Main.NewText(npc.ToString(), 50, 255, 130);
+                    float distance = Vector2.Distance(Player.Center, npc.Center);
+                    if (distance <= detectionRange)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        private bool IsNetItem(Item item)
+        {
+            if (item == null || item.type <= ItemID.None)
+            {
+                return false;
+            }
+            // Main.NewText(item.ToString(), 50, 255, 130);
+            return ItemID.Sets.CatchingTool[item.type];
+        }
+        #endregion
+
+
     }
 }
