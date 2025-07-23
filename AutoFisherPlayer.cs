@@ -52,12 +52,12 @@ namespace AutoFisher_JY
             if (SpecialLog())
             {
                 string version = ModContent.GetInstance<AutoFisher_JY>().Version.ToString();
-                Main.NewText("[AF]AutoFisher_JY Mod Loaded!", 50, 255, 130);
-                Main.NewText($"[AF]Version: {version}" , 50, 255, 130);       
-                Main.NewText("[AF] 0.1.4 Updated! Please Check Config to enable/disable this special log & 'Buff only Fishing' ", 50, 255, 130);
+                Main.NewText("[AF] AutoFisher_JY Mod Loaded!", 50, 255, 130);
+                Main.NewText($"[AF] Version: {version}" , 50, 255, 130);       
+                Main.NewText("[AF] 0.1.5 Updated! Auto Catcher Added! Try to put a bug net in slot 0 (last one)... ", 50, 255, 130);
 
             }
-        }
+        }   
         public override void OnHurt(Player.HurtInfo info)
         {
             ResetAutoFish();
@@ -104,9 +104,13 @@ namespace AutoFisher_JY
             {
                 if (npc.active && npc.catchItem > 0) 
                 {
+                    npc.type.ToString();
+
                     float distance = Vector2.Distance(Player.Center, npc.Center);
                     if (distance <= detectionRange)
                     {
+                        string name = npc.FullName;
+                        Main.NewText($"[AF] Critter: {name}", 50, 255, 130);
                         return true; 
                     }
                 }
@@ -139,13 +143,14 @@ namespace AutoFisher_JY
             if (AutoCatchingEnabled() && Player.selectedItem == CatchKey() && IsNetItem(Player.inventory[CatchKey()]) && Player.itemTime == 0 && Player.itemAnimation == 0 && !Player.noItems  && clickPhase == 0 && IsCritterNearby())
             {
 
+
                 Requestreel();
                 clickPhase = 1;// oh fuck i forgot, this is useless i think no matter i pass the phase or not, it will still do the thing lmfao
                 if (!DisableLog())
                 {
-                   // Main.NewText("Auto-Catch: Caught!", 50, 255, 130);
+                  // Main.NewText("Auto-Catch: Cast!", 50, 255, 130);
                 }
-                CombatText.NewText(Player.getRect(), Color.LightGreen, "Auto-Catch: Caught!");
+                CombatText.NewText(Player.getRect(), Color.LightGreen, "Auto-Catch: Cast!");
             }
             else if (clickPhase == 1)
             {

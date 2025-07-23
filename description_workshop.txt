@@ -1,3 +1,9 @@
+Updates on 16st July 2025	
+Auto Catcher added, it will automatically catch the animal around you when you are selecting a bug net. Default Slot is "0" ( the last slot in your inventory ).)
+
+Updates on 3rd July 2023
+Buff only Fishing added, please check config to enable it.
+
 
 Updates On 1st July 2024 
 
