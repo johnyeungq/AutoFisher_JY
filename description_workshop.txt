@@ -1,18 +1,24 @@
-Updates on 16st July 2025	
+Updates on 25th July 2025 0.1.6
+Auto Switch added , it will automatically switch to Net when a catchable critter is detected.
+Added option to Catch Critters for Fishing only.
+
+
+Updates on 16th July 2025 0.1.5
 Auto Catcher added, it will automatically catch the animal around you when you are selecting a bug net. Default Slot is "0" ( the last slot in your inventory ).)
 
-Updates on 3rd July 2023
+Updates on 3rd July 2025 0.1.4
 Buff only Fishing added, please check config to enable it.
 
 
-Updates On 1st July 2024 
+Updates On 1st July 2025 0.1.3
+
 
 God Mode Added, be careful, it will make you invincible, so use it wisely!
 Auto Buff Added , go to ettings to enable it.
 Log Disable function added, you can disable the log in the settings.	
 Updated icon
 
-Updates on 30th June 2025
+Updates on 30th June 2025 0.1.2
 Slot Binding ( 1 - 9 ) available now
 Also you can enable or disable the mod in game ( mod setting )
 

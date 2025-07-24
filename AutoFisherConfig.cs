@@ -67,5 +67,16 @@ namespace AutoFisher_JY
         [Range(1, 10)]
         public int ToggleAutoCatchKey { get; set; }
 
+        [Label("Catch All Critters")]
+        [Tooltip("Disable this to Catch Critters can be a Bait only (also Golden Critters).")]
+        [DefaultValue(true)]
+        public bool CatchAllCritters { get; set; }
+
+        [Label("AutoSwitch")]
+        [Tooltip("Enable this to Auto Switch Slot when a Critters nearby.")]
+        [DefaultValue(false)]
+        public bool AutoSwitch { get; set; }
+        
+
     }
 }

@@ -53,5 +53,15 @@ Configs: {
 			Label: Toggle Auto Catch Keybind
 			Tooltip: Select a key (1-10) to bind for toggling Auto-Fisher.
 		}
+
+		CatchAllCritters: {
+			Label: Catch All Critters
+			Tooltip: Disable this to Catch Critters can be a Bait only (also Golden Critters)
+		}
+
+		AutoSwitch: {
+			Label: AutoSwitch
+			Tooltip: Enable this to Auto Switch Slot when a Critters nearby.
+		}
 	}
 }
